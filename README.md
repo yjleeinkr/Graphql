@@ -91,11 +91,43 @@ const { ApolloServer, gql } = require("apollo-server");
 
 ```javascript
 // Graphql 스키마 정의하는 부분
-const typeDefs = gql``;
+const typeDefs = gql`
+  type Query{}
+  type Mutation()
+`;
 
-const server = new ApolloServer({ typeDefs }); // Apollo 서버 인스턴스 생성
+// Graphql 스키마 통해 제공할 데이터 만드는 부분
+const resolvers = {
+  // Query resolver
+  Query: {
+    tweet(root, args) {
+      // arguments 받아서 쿼리에 대한 결과 반환
+    },
+  },
+  Mutation: {
+    // arguments 받아서 쿼리에 대한 결과 반환 및 데이터 변경
+  },
+};
+
+const server = new ApolloServer({ typeDef, resolvers }); // Apollo 서버 인스턴스 생성
 
 server.listen().then(({ url }) => {
   console.log(`🐝 Running on ${url}`);
 });
 ```
+
+- `typeDefs` : `gql`을 사용해서 GraphQL 스키마 타입 정의
+- `resolvers` : GraphQL 스키마를 통해 제공할 데이터를 정의하는 함수를 담은 객체
+  <br>
+
+  1. Query Resolvers
+  2. Mutation Resolvers
+  3. Type Resolvers
+
+  - `arguments` <br>
+    : Apollo 서버가 `resolvers` 함수 호출 시 resolver에게 어떤 arguments를 주는데, <br>
+    첫번째 인자 `root` argument, 두번째 인자 클라이언트가 보낸 인자 (**실제 쿼리에 사용할 인자**)
+    <br>
+  - `Resolver arguments` <br>
+    : 4개의 인자를 가짐 `parent(root || source)`, `args`, `contextValue`, `info` <br>
+    `type resolver`를 호출한 root를 받아올 수 있다.
